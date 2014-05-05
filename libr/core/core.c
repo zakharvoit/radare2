@@ -261,16 +261,16 @@ static int autocomplete(RLine *line) {
 			if (p) { if (*p) n = strlen (p); else p = ""; }
 			if (*path=='~') {
 				char *lala = r_str_home (path+1);
-				free (path);
-				path = lala;
+				memcpy (path, lala, strlen (lala)+1);
+				free (lala);
 			} else if (*path!='.' && *path!='/') {
 				char *o = malloc (strlen (path)+4);
 				memcpy (o, "./", 3);
-				p = o+3;
 				n = strlen (path);
 				memcpy (o+3, path, strlen (path)+1);
-				free (path);
-				path = o;
+				memcpy (path, o, strlen (o)+1);
+				free (o);
+				p = path+3;
 			}
  			list = p? r_sys_dir (path): NULL;
 			if (list) {
